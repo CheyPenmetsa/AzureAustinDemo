@@ -502,8 +502,7 @@ namespace DocumentDbDemo
                 johnSmithCustomer.LastName = "Staton";
             }
 
-            await _documentDbClient.
-                UpsertDocumentAsync(_customerCollection.SelfLink, 
+            await _documentDbClient.ReplaceDocumentAsync(_customerCollection.SelfLink, 
                 johnSmithCustomer);
 
             johnSmithCustomer = _documentDbClient
