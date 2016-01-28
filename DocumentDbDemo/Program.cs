@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DocumentDbDemo.Models;
+﻿using DocumentDbDemo.Models;
 using Microsoft.Azure.Documents.Linq;
 using Microsoft.Azure.Documents.Partitioning;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Threading.Tasks;
 using Db = Microsoft.Azure.Documents;
 
 namespace DocumentDbDemo
 {
-    class Program
+    public class Program
     {
 
         #region Private members
@@ -32,6 +31,7 @@ namespace DocumentDbDemo
         private const string PartitionCollectionName2 = "Collection.N-Z";
 
         private static RangePartitionResolver<string> _rangeResolver;
+
         #endregion
 
         static void Main(string[] args)
