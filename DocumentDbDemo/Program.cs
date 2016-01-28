@@ -347,27 +347,20 @@ namespace DocumentDbDemo
             WHERE r.orders[1].orderamount >= 300
             */
 
-            var customerOrders = _documentDbClient.CreateDocumentQuery<dynamic>(collectionLink,
-                    "SELECT c.fname as firstName, c.lname as lastName, o.ord_num as orderNumber" +
-                    "FROM Customers c " +
-                    "JOIN o IN c.Orders" +
-                    "WHERE o.ord_amt > 300");
+            //SELECT c.fname as firstName, c.lname as lastName, o.ord_num as orderNumber
+            //FROM customer c
+            //JOIN o IN c.orders
+            //WHERE o.ord_amt >= 300
 
-            foreach (var item in customerOrders)
-            {
-                Console.WriteLine(item);
-            }
-
-            // LINQ
-            customerOrders = _documentDbClient.CreateDocumentQuery<Customer>(collectionLink)
+            var customerOrders = _documentDbClient.CreateDocumentQuery<Customer>(collectionLink)
                 .SelectMany(customer => customer.Orders
-                .Where(ord => ord.OrderAmount >= 300)
-                .Select(ord => new
-                {
-                    firstName = customer.FirstName,
-                    lastName = customer.LastName,
-                    orderNumber = ord.OrderNumber
-                }));
+                    .Where(ord => ord.OrderAmount >= 300)
+                    .Select(ord => new
+                    {
+                        firstName = customer.FirstName,
+                        lastName = customer.LastName,
+                        orderNumber = ord.OrderNumber
+                    }));
 
             foreach (var item in customerOrders)
             {
@@ -505,17 +498,16 @@ namespace DocumentDbDemo
             await _documentDbClient.ReplaceDocumentAsync(_customerCollection.SelfLink, 
                 johnSmithCustomer);
 
-            johnSmithCustomer = _documentDbClient
-               .CreateDocumentQuery<Customer>(_customerCollection.SelfLink)
-               .FirstOrDefault(f => f.FirstName == "John" && f.LastName == "Staton");
-
             //await _documentDbClient.DeleteDocumentAsync(_customerCollection.SelfLink,
             //    johnSmithCustomer);
         }
 
         private static async Task CleanUpAsync()
         {
-            await _documentDbClient.DeleteDatabaseAsync(_documentDatabase.SelfLink);
+            var deleteDbResponse =await _documentDbClient.
+                DeleteDatabaseAsync(_documentDatabase.SelfLink);
+
+            Console.WriteLine(JsonConvert.SerializeObject(deleteDbResponse));
         }
 
         #endregion
