@@ -68,9 +68,6 @@ namespace DocumentDbDemo
 
                 //Update and delete the document
                 UpdateAndDeleteDocumentAsync().Wait();
-
-                //Cleanup
-                CleanUpAsync().Wait();
             }
             catch (Db.DocumentClientException de)
             {
@@ -85,6 +82,8 @@ namespace DocumentDbDemo
             }
             finally
             {
+                //Cleanup
+                CleanUpAsync().Wait();
                 Console.WriteLine("End of demo, press any key to exit.");
                 Console.ReadKey();
             }
@@ -488,14 +487,14 @@ namespace DocumentDbDemo
         {
             var johnSmithCustomer = _documentDbClient
                 .CreateDocumentQuery<Customer>(_customerCollection.SelfLink)
-                .FirstOrDefault(f => f.FirstName == "John" && f.LastName== "Smith");
+                .FirstOrDefault(f => f.CustomerId == "1");
 
             if (johnSmithCustomer != null)
             {
                 johnSmithCustomer.LastName = "Staton";
             }
 
-            await _documentDbClient.ReplaceDocumentAsync(_customerCollection.SelfLink, 
+            await _documentDbClient.UpsertDocumentAsync(_customerCollection.SelfLink, 
                 johnSmithCustomer);
 
             //await _documentDbClient.DeleteDocumentAsync(_customerCollection.SelfLink,
